@@ -39,10 +39,10 @@ export abstract class Singleton {
   /**
    * 重置所有实例（主要用于测试和清理）
    */
-  public static resetAllInstances(): void {
+  public static async resetAllInstances() {
     for (const [, instance] of Singleton.instances) {
       try {
-        instance.dispose();
+        await instance.dispose();
       } catch (error) {
         console.error(`清理实例时出错:`, error);
       }
@@ -53,11 +53,11 @@ export abstract class Singleton {
   /**
    * 移除特定实例
    */
-  public static removeInstance(className: string): boolean {
+  public static async removeInstance(className: string) {
     const instance = Singleton.instances.get(className);
     if (instance) {
       try {
-        instance.dispose();
+        await instance.dispose();
       } catch (error) {
         console.error(`清理实例 ${className} 时出错:`, error);
       }
@@ -90,7 +90,7 @@ export abstract class Singleton {
    * 清理资源方法
    * 子类必须实现此方法来清理资源
    */
-  public abstract dispose(): void;
+  public abstract dispose(): Promise<void> | void;
 
   /**
    * 获取实例的类名
@@ -106,3 +106,15 @@ export abstract class Singleton {
     return !Singleton.instances.has(this.constructor.name);
   }
 }
+
+process.on('SIGINT', async () => {
+  console.log('Received SIGINT. Cleaning up singletons...');
+  await Singleton.resetAllInstances();
+  process.exit(0);
+});
+
+process.on('SIGTERM', async () => {
+  console.log('Received SIGTERM. Cleaning up singletons...');
+  await Singleton.resetAllInstances();
+  process.exit(0);
+});

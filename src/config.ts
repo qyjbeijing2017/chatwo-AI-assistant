@@ -1,6 +1,6 @@
 import { config } from 'dotenv';
 import { expand } from 'dotenv-expand';
-import { Singleton } from './singleton';
+import { Singleton } from './utils/singleton';
 
 /**
  * 配置管理单例

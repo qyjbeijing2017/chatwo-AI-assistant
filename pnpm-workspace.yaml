@@ -1,0 +1,9 @@
+ignoredBuiltDependencies:
+  - '@discordjs/opus'
+  - esbuild
+  - ffi-napi
+  - ffmpeg-static
+  - protobufjs
+  - ref-napi
+  - sharp
+  - speaker
